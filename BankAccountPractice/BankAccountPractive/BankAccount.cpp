@@ -136,7 +136,7 @@ void SavingsAccount::applyInterestRate() {
 	setBalance(newBalance);
 }
 
-//Savings Account Sub Class Starts Here
+//Savings Account Sub Class Ends Here
 
 int main() {
 
