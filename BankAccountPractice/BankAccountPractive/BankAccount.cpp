@@ -41,7 +41,7 @@ BankAccount::BankAccount(int acctNum, double balance) {
 		nextAccountNum++;
 	}
 
-	if (balance < 0 || balance > 100000) {
+	if (balance < 0 || balance >= 100000) {
 		this->balance = 0;
 	}
 	else {
@@ -71,10 +71,12 @@ int BankAccount::setAccountNum(int newNum) {
 
 //Sets a new balance for this BankAccount
 double BankAccount::setBalance(double newBalance) {
-	if (newBalance >= 0 && newBalance <= 1000000) {
+	if (newBalance >= 0 && newBalance <= 100000) {
 		this->balance = newBalance;
+	} else {
+		std::cout << "Balance cannot be over $100,000" << std::endl;
+		return this->balance;
 	}
-	return this->balance;
 }
 //Bank Account Class Ends Here
 
@@ -86,10 +88,11 @@ private:
 public:
 	double getInterestRate();
 	double setInterestRate(double newRate);
+	void applyInterestRate();
 	SavingsAccount();
 	SavingsAccount(double intRate, int accountNum, double balance);
 };
-double SavingsAccount::defaultIntRate = 0.001;
+double SavingsAccount::defaultIntRate = 0.005;
 
 //Creates a new SavingsAccount object using default values
 SavingsAccount::SavingsAccount() :BankAccount() {
@@ -100,7 +103,7 @@ SavingsAccount::SavingsAccount() :BankAccount() {
 SavingsAccount::SavingsAccount(double intRate, int accountNum, double balance)
 	: BankAccount(accountNum, balance) {
 	//Set interest rate
-	if (intRate >= 0 && intRate <= 1) {
+	if (intRate >= .005 && intRate <= .04) {
 		this->interestRate = intRate;
 	}
 	else {
@@ -115,7 +118,7 @@ double SavingsAccount::getInterestRate() {
 
 //Sets a new interest rate for this SavingsAccount
 double SavingsAccount::setInterestRate(double newRate) {
-	if (newRate > 0 && newRate < 1) {
+	if (newRate > .005 && newRate < .04) {
 		this->interestRate = newRate;
 	}
 	else {
@@ -123,10 +126,30 @@ double SavingsAccount::setInterestRate(double newRate) {
 	}
 }
 
+//Applies the current interest rate of a SavingsAccount to the objects balance
+void SavingsAccount::applyInterestRate() {
+	double newBalance, oldBalance, intRate;
+	newBalance = 0;
+	oldBalance = this->getBalance();
+	intRate = this->getInterestRate();
+	newBalance = oldBalance * intRate + oldBalance;
+	setBalance(newBalance);
+}
+
 //Savings Account Sub Class Starts Here
 
 int main() {
 
+	SavingsAccount acct1(0.005, 8787, 90000);
+	std::cout << "Account #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
+		<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
+	std::cout << "\nApplying interest rate of " << (acct1.getInterestRate() * 100) << "%" << std::endl;
+	acct1.applyInterestRate();
+	std::cout << "\nAccount #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
+		<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
+
+
+	/*Bank Account Tests Week 1 Class 2
 	SavingsAccount savingsAcct1, savingsAcct2;
 	SavingsAccount savingsAcct3(0.002, 3333, 45);
 
@@ -148,7 +171,6 @@ int main() {
 	std::cout << "\nSavings Account 4 Interest Rate: " << savingsAcct4.getInterestRate() << std::endl;
 
 
-	/*Bank Account Tests Week 1 Class 2
 	BankAccount acct1, acct2;
 	BankAccount acct3(2002, 101), acct4(101, -13), acct5(99999, 100001);
 	std::cout << "\n\n // Accounts numbers 1 and 2 check // \n\n" << std::endl;
