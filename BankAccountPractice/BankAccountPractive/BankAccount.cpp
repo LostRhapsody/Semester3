@@ -2,12 +2,15 @@
 *Name:	Bank Account Practice
 *Desc:	A project to practice creating classes and subclasses
 *Date	Sept 10th 2020
-*By:		Evan Robertson
+*By:	Evan Robertson
 */
+
 #include <iostream>
 
-//Bank Account Class Starts Here 
+//Bank Account Class Starts Here ////////////////////
 class BankAccount {
+	friend std::ostream& operator<<(std::ostream&, BankAccount&);
+	friend std::istream& operator>>(std::istream&, BankAccount&);
 private:
 	int accountNum;
 	double balance;
@@ -17,6 +20,8 @@ public:
 	double getBalance();
 	int setAccountNum(int newNum);
 	double setBalance(double newBalance);
+	static bool isValidAccountNumber(int);
+	static bool isValidBalance(double);
 	BankAccount();
 	BankAccount(int, double);
 };
@@ -33,7 +38,7 @@ BankAccount::BankAccount() {
 
 //Constructs a BankAcccount object with custom values for the properties
 BankAccount::BankAccount(int acctNum, double balance) {
-	if (acctNum >= 1000 && acctNum <= 9999) {
+	if(isValidAccountNumber(acctNum)) {
 		this->accountNum = acctNum;
 	}
 	else {
@@ -41,11 +46,11 @@ BankAccount::BankAccount(int acctNum, double balance) {
 		nextAccountNum++;
 	}
 
-	if (balance < 0 || balance >= 100000) {
-		this->balance = 0;
+	if (isValidBalance(balance)) {
+		this->balance = balance;
 	}
 	else {
-		this->balance = balance;
+		this->balance = 0;
 	}
 
 	std::cout << "bank account " << accountNum << " created.\n" << std::endl;
@@ -63,7 +68,7 @@ double BankAccount::getBalance() {
 
 //Sets a new account number for this BankAccount
 int BankAccount::setAccountNum(int newNum) {
-	if (newNum >= 1000 && newNum <= 9999) {
+	if (isValidAccountNumber(newNum)) {
 		this->accountNum = newNum;
 	}
 	return this->accountNum;
@@ -71,16 +76,62 @@ int BankAccount::setAccountNum(int newNum) {
 
 //Sets a new balance for this BankAccount
 double BankAccount::setBalance(double newBalance) {
-	if (newBalance >= 0 && newBalance <= 100000) {
+	if (isValidBalance(newBalance)) {
 		this->balance = newBalance;
-	} else {
+	}
+	else {
 		std::cout << "Balance cannot be over $100,000" << std::endl;
 		return this->balance;
 	}
 }
-//Bank Account Class Ends Here
 
-//Savings Account Sub Class Starts Here
+//Validates BankAccount account number
+bool BankAccount::isValidAccountNumber(int num) {
+	bool result = false;
+	if (num >= 1000 && num <= 9999) {
+		result = true;
+	}
+		return result;
+}
+
+//Validate BankAccount balance
+bool BankAccount::isValidBalance(double balance) {
+	bool result = false;
+	if (balance >= 0 && balance <= 100000) {
+		result = true;
+	}
+	return result;
+}
+//Bank Account Class Ends Here ////////////////////
+
+//Bank Account Overloaded output operator for simplified display
+std::ostream& operator<<(std::ostream& out, BankAccount& ba) {
+	out << "\nAccount Number: " << ba.getAccountNumber()
+		<< "\nAccount Balance: $" << ba.getBalance() << std::endl;
+	return out;
+}
+
+//Bank Account overloaded input operator for simplified input
+std::istream& operator>>(std::istream& in, BankAccount& ba) {
+	std::cout << "Enter a new account number (1000 - 9999): ";
+	in >> ba.accountNum;
+	while (! BankAccount::isValidAccountNumber(ba.accountNum)) {
+		std::cout << "Invalid enter\n";
+		std::cout << "Enter a new account numer (1000 - 9999): ";
+		in >> ba.accountNum;
+	}
+
+	std::cout << "\nEnter a new balance ($0.00 - $100,000.00): ";
+	in >> ba.balance;
+	while (! ba.isValidBalance(ba.balance)) {
+		std::cout << "Invalid enter\n";
+		std::cout << "Enter a new balance ($0.00 - $100,000.00): ";
+		in >> ba.balance;
+	}
+	return in;
+}
+
+//Savings Account Sub Class Starts Here ////////////////////
 class SavingsAccount :public BankAccount {
 private:
 	double interestRate;
@@ -89,6 +140,7 @@ public:
 	double getInterestRate();
 	double setInterestRate(double newRate);
 	void applyInterestRate();
+	static bool isValidInterestRate(double);
 	SavingsAccount();
 	SavingsAccount(double intRate, int accountNum, double balance);
 };
@@ -103,7 +155,7 @@ SavingsAccount::SavingsAccount() :BankAccount() {
 SavingsAccount::SavingsAccount(double intRate, int accountNum, double balance)
 	: BankAccount(accountNum, balance) {
 	//Set interest rate
-	if (intRate >= .005 && intRate <= .04) {
+	if (isValidInterestRate(intRate)) {
 		this->interestRate = intRate;
 	}
 	else {
@@ -118,7 +170,7 @@ double SavingsAccount::getInterestRate() {
 
 //Sets a new interest rate for this SavingsAccount
 double SavingsAccount::setInterestRate(double newRate) {
-	if (newRate > .005 && newRate < .04) {
+	if (isValidInterestRate(newRate)) {
 		this->interestRate = newRate;
 	}
 	else {
@@ -136,7 +188,14 @@ void SavingsAccount::applyInterestRate() {
 	setBalance(newBalance);
 }
 
-//Savings Account Sub Class Ends Here
+bool SavingsAccount::isValidInterestRate(double intRate) {
+	bool result = false;
+	if (intRate >= .005 && intRate <= .04) {
+		result = true;
+	}
+	return result;
+}
+//Savings Account Sub Class Ends Here ////////////////////
 
 int main() {
 
@@ -147,7 +206,10 @@ int main() {
 	acct1.applyInterestRate();
 	std::cout << "\nAccount #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
 		<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
-
+	std::cin >> acct1;
+	std::cout << acct1;
+	acct1.setInterestRate(0.009);
+	std::cout << "Acct1 int rate: " << acct1.getInterestRate() << std::endl;
 
 	/*Bank Account Tests Week 1 Class 2
 	SavingsAccount savingsAcct1, savingsAcct2;
