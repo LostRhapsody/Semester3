@@ -3,9 +3,12 @@
 *Desc:	A project to practice creating classes and subclasses
 *Date	Sept 10th 2020
 *By:	Evan Robertson
+* Recent Updates:
+*		Sept 17th - Added Customer Class
 */
 
 #include <iostream>
+#include <string>
 
 //Bank Account Class Starts Here ////////////////////
 class BankAccount {
@@ -188,6 +191,7 @@ void SavingsAccount::applyInterestRate() {
 	setBalance(newBalance);
 }
 
+//Savings account overloaded input operator for simplified input
 bool SavingsAccount::isValidInterestRate(double intRate) {
 	bool result = false;
 	if (intRate >= .005 && intRate <= .04) {
@@ -197,22 +201,93 @@ bool SavingsAccount::isValidInterestRate(double intRate) {
 }
 //Savings Account Sub Class Ends Here ////////////////////
 
+//Customer Class Starts Here ////////////////////
+class Customer {
+private:
+	std::string name;
+	BankAccount* accounts;
+	int numOfAccounts;
+public:
+	std::string getName();
+	BankAccount* getAccounts();
+	int getnumOfAccounts();
+	void setName(std::string);
+	void setAccounts(int, BankAccount*);
+	Customer();
+	Customer(std::string, int, BankAccount*);
+};
+
+//Constructs a Customer object with default values
+Customer::Customer() {
+	name = "Drew Doe";
+	numOfAccounts = 0;
+	accounts = new BankAccount[0];
+}
+
+//Constructs a Customer object with custom values for the properties
+Customer::Customer(std::string newName, int newNumOfAccounts, BankAccount* accts) {
+	name = newName;
+	numOfAccounts = newNumOfAccounts;
+	accounts = accts;
+}
+
+//Returns name for Customer object
+std::string Customer::getName() {
+	return std::string(name);
+}
+
+//Returns Accounts for Customer object
+BankAccount* Customer::getAccounts() {
+	return accounts;
+}
+
+//Returns numOfAccounts for Customer object
+int Customer::getnumOfAccounts() {
+	return numOfAccounts;
+}
+
+//Sets name for a Customer object
+void Customer::setName(std::string newName) {
+	name = newName;
+}
+
+//Sets Accounts for Customer object
+void Customer::setAccounts(int newNumOfAccounts, BankAccount* accts) {
+	numOfAccounts = newNumOfAccounts;
+	accounts = accts;
+}
+//Customer Class Ends Here ////////////////////
+
 int main() {
 
-	SavingsAccount acct1(0.005, 8787, 90000);
-	std::cout << "Account #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
-		<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
-	std::cout << "\nApplying interest rate of " << (acct1.getInterestRate() * 100) << "%" << std::endl;
-	acct1.applyInterestRate();
-	std::cout << "\nAccount #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
-		<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
-	std::cin >> acct1;
-	std::cout << acct1;
-	acct1.setInterestRate(0.009);
-	std::cout << "Acct1 int rate: " << acct1.getInterestRate() << std::endl;
+	BankAccount acct1, acct2;
+	BankAccount acct3(1234, 2165.45);
+	SavingsAccount savingsAcct1, savingsAcct2(0.005, 8787, 90000);
 
+	Customer defCustomer;
+
+	std::cout << "Customer 1: " << defCustomer.getName() 
+		<< "\nNumber of Accounts: " << defCustomer.getnumOfAccounts() << std::endl;
+
+	BankAccount cust2Accts[] = { acct1, acct3, };
+	Customer cust2("Johny Joe", 2, cust2Accts);
+
+	std::cout << "Customer 2: " << cust2.getName() 
+		<< "\nNumber of Accounts: " << cust2.getnumOfAccounts() 
+		<< "\nAccounts: " << cust2.getAccounts()[0] << cust2.getAccounts()[1] << std::endl;
+
+	/*std::cout << "Account #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
+	*	<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
+	*std::cout << "\nApplying interest rate of " << (acct1.getInterestRate() * 100) << "%" << std::endl;
+	*acct1.applyInterestRate();
+	*std::cout << "\nAccount #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
+	*	<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
+	*std::cin >> acct1;
+	*std::cout << acct1;
+	*acct1.setInterestRate(0.009);
+	*std::cout << "Acct1 int rate: " << acct1.getInterestRate() << std::endl;
+	*/
 	/*Bank Account Tests Week 1 Class 2
-	SavingsAccount savingsAcct1, savingsAcct2;
 	SavingsAccount savingsAcct3(0.002, 3333, 45);
 
 	std::cout << "\nSavings Account #" << savingsAcct1.getAccountNumber()

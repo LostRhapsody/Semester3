@@ -1,4 +1,4 @@
 ﻿  BankAccount.cpp
-C:\Users\MCHom\OneDrive\Documents\GitHub\Semester3\BankAccountPractice\BankAccountPractive\BankAccount.cpp(86): warning C4715: 'BankAccount::setBalance': not all control paths return a value
-C:\Users\MCHom\OneDrive\Documents\GitHub\Semester3\BankAccountPractice\BankAccountPractive\BankAccount.cpp(179): warning C4715: 'SavingsAccount::setInterestRate': not all control paths return a value
+C:\Users\MCHom\OneDrive\Documents\GitHub\Semester3\BankAccountPractice\BankAccountPractive\BankAccount.cpp(89): warning C4715: 'BankAccount::setBalance': not all control paths return a value
+C:\Users\MCHom\OneDrive\Documents\GitHub\Semester3\BankAccountPractice\BankAccountPractive\BankAccount.cpp(182): warning C4715: 'SavingsAccount::setInterestRate': not all control paths return a value
   BankAccountPractive.vcxproj -> C:\Users\MCHom\OneDrive\Documents\GitHub\Semester3\BankAccountPractice\Debug\BankAccountPractice.exe
