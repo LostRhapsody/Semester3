@@ -5,6 +5,7 @@
 *By:	Evan Robertson
 * Recent Updates:
 *		Sept 17th - Added Customer Class, ChequingAccount class,
+*		Sept 18th - Added insertion and extraction operators for new classes, added static validatiod methods
 */
 
 #include <iostream>
@@ -131,7 +132,7 @@ std::istream& operator>>(std::istream& in, BankAccount& ba) {
 	std::cout << "Enter a new account number (1000 - 9999): ";
 	in >> ba.accountNum;
 	while (! BankAccount::isValidAccountNumber(ba.accountNum)) {
-		std::cout << "Invalid enter\n";
+		std::cout << "Invalid account number\n";
 		std::cout << "Enter a new account numer (1000 - 9999): ";
 		in >> ba.accountNum;
 	}
@@ -139,7 +140,7 @@ std::istream& operator>>(std::istream& in, BankAccount& ba) {
 	std::cout << "\nEnter a new balance ($0.00 - $100,000.00): ";
 	in >> ba.balance;
 	while (! ba.isValidBalance(ba.balance)) {
-		std::cout << "Invalid enter\n";
+		std::cout << "Invalid balance\n";
 		std::cout << "Enter a new balance ($0.00 - $100,000.00): ";
 		in >> ba.balance;
 	}
@@ -148,6 +149,8 @@ std::istream& operator>>(std::istream& in, BankAccount& ba) {
 
 //Savings Account Sub Class Starts Here ////////////////////
 class SavingsAccount :public BankAccount {
+	friend std::ostream& operator<<(std::ostream&, SavingsAccount&);
+	friend std::istream& operator>>(std::istream&, SavingsAccount&);
 private:
 	double interestRate;
 	static double defaultIntRate;
@@ -203,7 +206,7 @@ void SavingsAccount::applyInterestRate() {
 	setBalance(newBalance);
 }
 
-//Savings account overloaded input operator for simplified input
+//Validate SavingsAccount Interest Rate
 bool SavingsAccount::isValidInterestRate(double intRate) {
 	bool result = false;
 	if (intRate >= .005 && intRate <= .04) {
@@ -213,15 +216,60 @@ bool SavingsAccount::isValidInterestRate(double intRate) {
 }
 //Savings Account Sub Class Ends Here ////////////////////
 
+//Overloaded Output operator for simplified output of SavingsAccount object
+std::ostream& operator<<(std::ostream& out, SavingsAccount& sa) {
+	out << "\nAccount Number: " << sa.getAccountNumber()
+		<< "\nAccount Balance: $" << sa.getBalance()
+		<< "\nAccount Interest Rate: " << sa.getInterestRate() << "%" << std::endl;
+	return out;
+}
+
+//Overloaded Input operator for simplified input of SavingsAccount object
+std::istream& operator>>(std::istream& in, SavingsAccount& sa) {
+	int acctNum = sa.getAccountNumber();
+	double balance = sa.getBalance();
+	std::cout << "Enter a new account number (1000 - 9999): ";
+	in >> acctNum;
+	while (!BankAccount::isValidAccountNumber(acctNum)) {
+		std::cout << "Invalid account number\n";
+		std::cout << "Enter a new account numer (1000 - 9999): ";
+		in >> acctNum;
+		sa.setAccountNum(acctNum);
+	}
+	sa.setAccountNum(acctNum);
+
+	std::cout << "\nEnter a new balance ($0.00 - $100,000.00): ";
+	in >> balance;
+	while (!sa.isValidBalance(balance)) {
+		std::cout << "Invalid balance\n";
+		std::cout << "Enter a new balance ($0.00 - $100,000.00): ";
+		in >> balance;
+		sa.setBalance(balance);
+	}
+	sa.setBalance(balance);
+
+	std::cout << "\nEnter a new interest rate (0.005% - 0.04%) ";
+	in >> sa.interestRate;
+	while (!sa.isValidInterestRate(sa.interestRate)) {
+		std::cout << "invalid interest rate\n";
+		std::cout<<"Enter a new interest rate (0.005% - 0.04%) ";
+		in >> sa.interestRate;
+	}
+	return in;
+}
+
 //ChequingAccount Starts Here ////////////////////
 class ChequingAccount :public BankAccount {
+	friend std::ostream& operator<<(std::ostream&, ChequingAccount&);
+	friend std::istream& operator>>(std::istream&, ChequingAccount&);
 private:
 	int numOfTransactions;
 public:
 	int getTransactionNum();
-	void setTransactionNum(int);
+	int setTransactionNum(int);
 	void cheque(double);
 	void applyFees(int);
+	static bool isValidTransactionNum(int);
 	ChequingAccount();
 	ChequingAccount(int, int, double);
 };
@@ -243,17 +291,12 @@ int ChequingAccount::getTransactionNum() {
 }
 
 //Sets the number of transactions for this ChequingAccount object
-void ChequingAccount::setTransactionNum(int newNum) {
-	if (newNum < 0) {
-		while (newNum < 0) {
-			std::cout << "Number of transactions cannot be less than zero\nEnter number of transactions: " << std::endl;
-			std::cin >> newNum;
-
-		}
+int ChequingAccount::setTransactionNum(int newNum) {
+	if (isValidTransactionNum(newNum)) {
 		numOfTransactions = newNum;
 	}
 	else {
-		numOfTransactions = newNum;
+		return numOfTransactions;
 	}
 }
 
@@ -275,10 +318,60 @@ void ChequingAccount::applyFees(int transactions) {
 	numOfTransactions = 0;
 }
 
+//Validate ChequingAccount Transaction numbers
+bool ChequingAccount::isValidTransactionNum(int transactionNum) {
+	bool result = false;
+	if (transactionNum >= 0) {
+		result = true;
+	}
+	return result;
+}
 //ChequingAccount Ends Here////////////////////
+
+std::ostream& operator<<(std::ostream& out, ChequingAccount& ca) {
+	out << "\nAccount Number: " << ca.getAccountNumber()
+		<< "\nAccount Balance: $" << ca.getBalance()
+		<< "\nAccount Transactions: " << ca.getTransactionNum() << std::endl;
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, ChequingAccount& ca) {
+	int acctNum = ca.getAccountNumber();
+	double balance = ca.getBalance();
+	std::cout << "Enter a new account number (1000 - 9999): ";
+	in >> acctNum;
+	while (!BankAccount::isValidAccountNumber(acctNum)) {
+		std::cout << "Invalid account number\n";
+		std::cout << "Enter a new account numer (1000 - 9999): ";
+		in >> acctNum;
+		ca.setAccountNum(acctNum);
+	}
+	ca.setAccountNum(acctNum);
+
+	std::cout << "\nEnter a new balance ($0.00 - $100,000.00): ";
+	in >> balance;
+	while (!ca.isValidBalance(balance)) {
+		std::cout << "Invalid balance\n";
+		std::cout << "Enter a new balance ($0.00 - $100,000.00): ";
+		in >> balance;
+		ca.setBalance(balance);
+	}
+	ca.setBalance(balance);
+
+	std::cout << "\nEnter a new number of transactions: ";
+	in >> ca.numOfTransactions;
+	while (!ca.isValidTransactionNum(ca.numOfTransactions)) {
+		std::cout << "Invalid number of transactions\n";
+		std::cout << "Enter a new number of transactions: ";
+		in >> ca.numOfTransactions;
+	}
+	return in;
+}
 
 //Customer Class Starts Here ////////////////////
 class Customer {
+	friend std::ostream& operator<<(std::ostream&, Customer&);
+	friend std::istream& operator>>(std::istream&, Customer&);
 private:
 	std::string name;
 	BankAccount* accounts;
@@ -287,8 +380,10 @@ public:
 	std::string getName();
 	BankAccount* getAccounts();
 	int getNumOfAccounts();
-	void setName(std::string);
-	void setAccounts(int, BankAccount*);
+	std::string setName(std::string);
+	int setAccounts(int, BankAccount*);
+	static bool isValidName(std::string);
+	static bool isValidNumOfAccts(int);
 	Customer();
 	Customer(std::string, int, BankAccount*);
 };
@@ -326,45 +421,108 @@ int Customer::getNumOfAccounts() {
 }
 
 //Sets name for a Customer object
-void Customer::setName(std::string newName) {
-	if (newName == "") {
-		while (newName == "") {
-			std::cout << "Name must not be empty\nEnter name: " << std::endl;
-			std::cin >> newName;
-			name = newName;
-		}
-	}
-	else {
+std::string Customer::setName(std::string newName) {
+	if (isValidName(newName)) {
 		name = newName;
 	}
+	return name;
 }
 
 //Sets Accounts for Customer object
-void Customer::setAccounts(int newNumOfAccounts, BankAccount* accts) {
-	if (newNumOfAccounts < 0) {
-		while (newNumOfAccounts < 0) {
-			std::cout << "Number of accounts cannot be less than zero\nEnter number of accounts: " << std::endl;
-			std::cin >> newNumOfAccounts;
-			numOfAccounts = newNumOfAccounts;
-		}
-	}
-	else {
+int Customer::setAccounts(int newNumOfAccounts, BankAccount* accts) {
+	accounts = accts;
+	if (isValidNumOfAccts(newNumOfAccounts)) {
 		numOfAccounts = newNumOfAccounts;
 	}
-	accounts = accts;
+	return numOfAccounts;
+}
+
+//Verifies Customer object name
+bool Customer::isValidName(std::string name) {
+	bool result = false;
+	if (name != "") {
+		result = true;
+	}
+	return result;
+}
+
+//Verifies Customer object number of accounts
+bool Customer::isValidNumOfAccts(int numOfAccts) {
+	bool result = false;
+	if (numOfAccts >= 0) {
+		result = true;
+	}
+	return result;
 }
 //Customer Class Ends Here ////////////////////
 
+//Customer object overloaded output operator
+std::ostream& operator<<(std::ostream& out, Customer& customer) {
+	out << "Customer name: " << customer.name
+		<< "\nNumber of Customer Accounts: " << customer.numOfAccounts
+		<< "\nCustomer Accounts: ";
+	if (customer.numOfAccounts == 0) {
+		std::cout << "\nCustomer has no accounts" << std::endl;
+	}
+	else {
+	for (int x = 0; x < customer.numOfAccounts; x++) {
+		out << customer.accounts[x] << std::endl;
+		}
+	}
+	return out;
+}
+
+//Customer object overloaded input operator
+std::istream& operator>>(std::istream& in, Customer& customer) {
+	std::cout << "Enter name for Customer: ";
+	in >> customer.name;
+	while (!customer.isValidName(customer.name)) {
+		std::cout << "Name must not be left empty\n";
+		std::cout << "Enter name for Customer: ";
+		in >> customer.name;
+	}
+
+	std::cout << "Enter number of accounts for this customer: ";
+	in >> customer.numOfAccounts;
+	while (!customer.isValidNumOfAccts(customer.numOfAccounts)) {
+		std::cout << "Number of accounts must not be less than zero\n";
+		std::cout << "Enter number of accounts for this customer: ";
+		in >> customer.numOfAccounts;
+	}
+	return in;
+}
+
 int main() {
 
-	BankAccount acct1;
-	Customer cust1;
+	BankAccount acct1, acct2, acct3, acct4;
+	SavingsAccount savAcct1;
+	ChequingAccount cheAcct1;
+	Customer cust1, cust2;
 	BankAccount cust1Accounts[] = { acct1 };
+	BankAccount cust2Accounts[] = { acct2, acct3, acct4 };
 	cust1.setAccounts(1, cust1Accounts);
+	cust2.setAccounts(3, cust2Accounts);
 	cust1.setName("evan");
 	std::cout << cust1.getAccounts()[0] << std::endl;
 	std::cout << cust1.getNumOfAccounts() << std::endl;
 	std::cout << cust1.getName() << std::endl;
-
+	std::cout << "Savings Account: " << std::endl;
+	std::cout << savAcct1;
+	/*
+	*std::cout << "Testing Phase : Overloaded Operators : SavingsAccount" << std::endl;
+	*std::cout << savAcct1;
+	*std::cin >> savAcct1;
+	*std::cout << savAcct1;
+	*
+	*std::cout << "Testing Phase : Overloaded Operators : ChequingAccount" << std::endl;
+	*std::cout << cheAcct1;
+	*std::cin >> cheAcct1;
+	*std::cout << cheAcct1;
+	*/
+	std::cout << "Testing Phase : Overloaded Operators : Customer" << std::endl;
+	std::cout << cust2;
+	std::cin >> cust2;
+	std::cout << cust2;
+	
 	return 0;
 }
