@@ -4,7 +4,7 @@
 *Date	Sept 10th 2020
 *By:	Evan Robertson
 * Recent Updates:
-*		Sept 17th - Added Customer Class
+*		Sept 17th - Added Customer Class, ChequingAccount class,
 */
 
 #include <iostream>
@@ -21,8 +21,10 @@ private:
 public:
 	int getAccountNumber();
 	double getBalance();
-	int setAccountNum(int newNum);
-	double setBalance(double newBalance);
+	int setAccountNum(int);
+	double setBalance(double);
+	void deposit(double);
+	void withdrawal(double);
 	static bool isValidAccountNumber(int);
 	static bool isValidBalance(double);
 	BankAccount();
@@ -88,6 +90,16 @@ double BankAccount::setBalance(double newBalance) {
 	}
 }
 
+//Makes a deposit into the BankAccount object
+void BankAccount::deposit(double deposit) {
+	balance += deposit;
+}
+
+//Makes a withdrawl from the BankAccount object
+void BankAccount::withdrawal(double withdrawal) {
+	balance -= withdrawal;
+}
+
 //Validates BankAccount account number
 bool BankAccount::isValidAccountNumber(int num) {
 	bool result = false;
@@ -141,11 +153,11 @@ private:
 	static double defaultIntRate;
 public:
 	double getInterestRate();
-	double setInterestRate(double newRate);
+	double setInterestRate(double);
 	void applyInterestRate();
 	static bool isValidInterestRate(double);
 	SavingsAccount();
-	SavingsAccount(double intRate, int accountNum, double balance);
+	SavingsAccount(double, int, double);
 };
 double SavingsAccount::defaultIntRate = 0.005;
 
@@ -201,6 +213,70 @@ bool SavingsAccount::isValidInterestRate(double intRate) {
 }
 //Savings Account Sub Class Ends Here ////////////////////
 
+//ChequingAccount Starts Here ////////////////////
+class ChequingAccount :public BankAccount {
+private:
+	int numOfTransactions;
+public:
+	int getTransactionNum();
+	void setTransactionNum(int);
+	void cheque(double);
+	void applyFees(int);
+	ChequingAccount();
+	ChequingAccount(int, int, double);
+};
+
+//Constructs a ChequingAccount object with default values
+ChequingAccount::ChequingAccount() {
+	numOfTransactions = 0;
+}
+
+//Constructs a ChequingAccount object with custom values
+ChequingAccount::ChequingAccount(int transactions, int accountNum, double balance)
+	: BankAccount(accountNum, balance) {
+	numOfTransactions = transactions;
+}
+
+//Returns the number of transactions for this ChequingAccount object
+int ChequingAccount::getTransactionNum() {
+	return numOfTransactions;
+}
+
+//Sets the number of transactions for this ChequingAccount object
+void ChequingAccount::setTransactionNum(int newNum) {
+	if (newNum < 0) {
+		while (newNum < 0) {
+			std::cout << "Number of transactions cannot be less than zero\nEnter number of transactions: " << std::endl;
+			std::cin >> newNum;
+
+		}
+		numOfTransactions = newNum;
+	}
+	else {
+		numOfTransactions = newNum;
+	}
+}
+
+//Cheque method used to debit account by the amount of the cheque
+void ChequingAccount::cheque(double debitAmount) {
+	double balance = getBalance();
+	balance -= debitAmount;
+	setBalance(balance);
+	//Increment Transaction Count
+	numOfTransactions++;
+}
+
+//Applies fees to this ChequingAccount object according to numOfTransactions
+void ChequingAccount::applyFees(int transactions) {
+	double balance = getBalance();
+	balance -= transactions * 0.25;
+	setBalance(balance);
+	//Set numOfTransactions to zero
+	numOfTransactions = 0;
+}
+
+//ChequingAccount Ends Here////////////////////
+
 //Customer Class Starts Here ////////////////////
 class Customer {
 private:
@@ -210,7 +286,7 @@ private:
 public:
 	std::string getName();
 	BankAccount* getAccounts();
-	int getnumOfAccounts();
+	int getNumOfAccounts();
 	void setName(std::string);
 	void setAccounts(int, BankAccount*);
 	Customer();
@@ -238,96 +314,57 @@ std::string Customer::getName() {
 
 //Returns Accounts for Customer object
 BankAccount* Customer::getAccounts() {
-	return accounts;
+	if (numOfAccounts == 0) {
+		std::cout << "Customer has no accounts" << std::endl;
+	}
+		return accounts;
 }
 
 //Returns numOfAccounts for Customer object
-int Customer::getnumOfAccounts() {
+int Customer::getNumOfAccounts() {
 	return numOfAccounts;
 }
 
 //Sets name for a Customer object
 void Customer::setName(std::string newName) {
-	name = newName;
+	if (newName == "") {
+		while (newName == "") {
+			std::cout << "Name must not be empty\nEnter name: " << std::endl;
+			std::cin >> newName;
+			name = newName;
+		}
+	}
+	else {
+		name = newName;
+	}
 }
 
 //Sets Accounts for Customer object
 void Customer::setAccounts(int newNumOfAccounts, BankAccount* accts) {
-	numOfAccounts = newNumOfAccounts;
+	if (newNumOfAccounts < 0) {
+		while (newNumOfAccounts < 0) {
+			std::cout << "Number of accounts cannot be less than zero\nEnter number of accounts: " << std::endl;
+			std::cin >> newNumOfAccounts;
+			numOfAccounts = newNumOfAccounts;
+		}
+	}
+	else {
+		numOfAccounts = newNumOfAccounts;
+	}
 	accounts = accts;
 }
 //Customer Class Ends Here ////////////////////
 
 int main() {
 
-	BankAccount acct1, acct2;
-	BankAccount acct3(1234, 2165.45);
-	SavingsAccount savingsAcct1, savingsAcct2(0.005, 8787, 90000);
+	BankAccount acct1;
+	Customer cust1;
+	BankAccount cust1Accounts[] = { acct1 };
+	cust1.setAccounts(1, cust1Accounts);
+	cust1.setName("evan");
+	std::cout << cust1.getAccounts()[0] << std::endl;
+	std::cout << cust1.getNumOfAccounts() << std::endl;
+	std::cout << cust1.getName() << std::endl;
 
-	Customer defCustomer;
-
-	std::cout << "Customer 1: " << defCustomer.getName() 
-		<< "\nNumber of Accounts: " << defCustomer.getnumOfAccounts() << std::endl;
-
-	BankAccount cust2Accts[] = { acct1, acct3, };
-	Customer cust2("Johny Joe", 2, cust2Accts);
-
-	std::cout << "Customer 2: " << cust2.getName() 
-		<< "\nNumber of Accounts: " << cust2.getnumOfAccounts() 
-		<< "\nAccounts: " << cust2.getAccounts()[0] << cust2.getAccounts()[1] << std::endl;
-
-	/*std::cout << "Account #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
-	*	<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
-	*std::cout << "\nApplying interest rate of " << (acct1.getInterestRate() * 100) << "%" << std::endl;
-	*acct1.applyInterestRate();
-	*std::cout << "\nAccount #" << acct1.getAccountNumber() << "\nBalance: " << acct1.getBalance()
-	*	<< "\nInterest Rate: " << acct1.getInterestRate() << std::endl;
-	*std::cin >> acct1;
-	*std::cout << acct1;
-	*acct1.setInterestRate(0.009);
-	*std::cout << "Acct1 int rate: " << acct1.getInterestRate() << std::endl;
-	*/
-	/*Bank Account Tests Week 1 Class 2
-	SavingsAccount savingsAcct3(0.002, 3333, 45);
-
-	std::cout << "\nSavings Account #" << savingsAcct1.getAccountNumber()
-		<< "\nBalance: " << savingsAcct1.getBalance()
-		<< "\nInterest Rate: " << savingsAcct1.getInterestRate();
-	std::cout << "\n\nSavings Account #" << savingsAcct2.getAccountNumber()
-		<< "\nBalance: " << savingsAcct2.getBalance()
-		<< "\nInterest Rate: " << savingsAcct2.getInterestRate();
-	std::cout << "\n\nSavings Account #" << savingsAcct3.getAccountNumber()
-		<< "\nBalance: " << savingsAcct3.getBalance()
-		<< "\nInterest Rate: " << savingsAcct3.getInterestRate();
-
-	std::cout << "\n\n**Attempted to change interest rate for Savings Account 1 to invalid integer here**" << std::endl;
-	savingsAcct1.setInterestRate(1);
-	std::cout << "\nSavings Account 1 Interest Rate: " << savingsAcct1.getInterestRate() << std::endl;
-	std::cout << "\n**Created a new savings account with invalid interest rate here**" << std::endl;
-	SavingsAccount savingsAcct4(-1, 2222, 33);
-	std::cout << "\nSavings Account 4 Interest Rate: " << savingsAcct4.getInterestRate() << std::endl;
-
-
-	BankAccount acct1, acct2;
-	BankAccount acct3(2002, 101), acct4(101, -13), acct5(99999, 100001);
-	std::cout << "\n\n // Accounts numbers 1 and 2 check // \n\n" << std::endl;
-	std::cout << "Account #" << acct1.getAccountNumber()
-		<< "\nBalance: " << acct1.getBalance() << std::endl;
-	std::cout << "Account #" << acct2.getAccountNumber()
-		<< "\nBalance: " << acct2.getBalance() << std::endl;
-	acct1.setAccountNum(999);
-	acct1.setBalance(-10);
-	acct2.setAccountNum(99991);
-	acct2.setBalance(99999999);
-	std::cout << "\n\n // Accounts numbers 1, 2, 3, 4, and 5 tests // \n\n" << std::endl;
-	std::cout << "Account #" << acct1.getAccountNumber()
-		<< "\nBalance: " << acct1.getBalance() << std::endl;
-	std::cout << "Account #" << acct2.getAccountNumber()
-		<< "\nBalance: " << acct2.getBalance() << std::endl;
-	std::cout << "Account #" << acct3.getAccountNumber()
-		<< "\nBalance: " << acct3.getBalance() << std::endl;
-	std::cout << "Account #" << acct4.getAccountNumber()
-		<< "\nBalance: " << acct4.getBalance() << std::endl;
-		*/
 	return 0;
 }
