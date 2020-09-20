@@ -6,6 +6,7 @@
 * Recent Updates:
 *		Sept 17th - Added Customer Class, ChequingAccount class,
 *		Sept 18th - Added insertion and extraction operators for new classes, added static validatiod methods
+*		Sept 20th - Changed testing methods, more thorough. Should be ready for next class 
 */
 
 #include <iostream>
@@ -466,7 +467,7 @@ std::ostream& operator<<(std::ostream& out, Customer& customer) {
 	}
 	else {
 	for (int x = 0; x < customer.numOfAccounts; x++) {
-		out << customer.accounts[x] << std::endl;
+		out << customer.accounts[x];
 		}
 	}
 	return out;
@@ -494,35 +495,51 @@ std::istream& operator>>(std::istream& in, Customer& customer) {
 
 int main() {
 
-	BankAccount acct1, acct2, acct3, acct4;
-	SavingsAccount savAcct1;
-	ChequingAccount cheAcct1;
-	Customer cust1, cust2;
+	BankAccount acct1, acct2(9876, 400);
+	SavingsAccount savAcct1, savAcct2(0.008, 5678, 85.43);
+	ChequingAccount cheAcct1, cheAcct2(1, 8383, 99.76);
+	Customer cust1, cust2, cust3, cust4;
 	BankAccount cust1Accounts[] = { acct1 };
-	BankAccount cust2Accounts[] = { acct2, acct3, acct4 };
+	BankAccount cust2Accounts[] = { savAcct1, cheAcct1};
+	BankAccount cust3Accounts[] = { acct2, savAcct2, cheAcct2 };
 	cust1.setAccounts(1, cust1Accounts);
-	cust2.setAccounts(3, cust2Accounts);
-	cust1.setName("evan");
-	std::cout << cust1.getAccounts()[0] << std::endl;
-	std::cout << cust1.getNumOfAccounts() << std::endl;
-	std::cout << cust1.getName() << std::endl;
-	std::cout << "Savings Account: " << std::endl;
+	cust2.setAccounts(2, cust2Accounts);
+	cust3.setAccounts(3, cust3Accounts);
+
+	/* Testing Customer Objects Using Overloaded Operators: Begin*/
+	std::cout << "Testing Phase : Overloaded Operators : Customer Objects : Display\n" << std::endl;
+	std::cout << cust1 << std::endl;
+	std::cout << cust2 << std::endl;
+	std::cout << cust3 << std::endl;
+	std::cout << cust4 << std::endl;
+
+	std::cout << "Testing Phase : Overloaded Operators : Customer Objects (cust1) : Input\n" << std::endl;
+	std::cin >> cust1;
+
+	std::cout << "Testing Phase : Overloaded Operators : Customer Objects (cust1) : Display\n" << std::endl;
+	std::cout << cust1 << std::endl;
+	/* Testing Customer Objects Using Overloaded Operators: End*/
+
+	/* Testing BankAccount Objects Using Overloaded Operators: Begin*/
+	std::cout << "Testing Phase : Overloaded Operators : BankAccount" << std::endl;
+	std::cout << acct1;
+	std::cin >> acct1;
+	std::cout << acct1;
+	/* Testing BankAccount Objects Using Overloaded Operators: Begin*/
+
+	/* Testing SavingsAccount Objects Using Overloaded Operators: Begin*/
+	std::cout << "Testing Phase : Overloaded Operators : SavingsAccount" << std::endl;
 	std::cout << savAcct1;
-	/*
-	*std::cout << "Testing Phase : Overloaded Operators : SavingsAccount" << std::endl;
-	*std::cout << savAcct1;
-	*std::cin >> savAcct1;
-	*std::cout << savAcct1;
-	*
-	*std::cout << "Testing Phase : Overloaded Operators : ChequingAccount" << std::endl;
-	*std::cout << cheAcct1;
-	*std::cin >> cheAcct1;
-	*std::cout << cheAcct1;
-	*/
-	std::cout << "Testing Phase : Overloaded Operators : Customer" << std::endl;
-	std::cout << cust2;
-	std::cin >> cust2;
-	std::cout << cust2;
+	std::cin >> savAcct1;
+	std::cout << savAcct1;
+	/* Testing SavingsAccount Objects Using Overloaded Operators: Begin*/
+
+	/* Testing ChequingAccount Objects Using Overloaded Operators: Begin*/
+	std::cout << "Testing Phase : Overloaded Operators : ChequingAccount" << std::endl;
+	std::cout << cheAcct1;
+	std::cin >> cheAcct1;
+	std::cout << cheAcct1;
+	/* Testing ChequingAccount Objects Using Overloaded Operators: Begin*/
 	
 	return 0;
 }
