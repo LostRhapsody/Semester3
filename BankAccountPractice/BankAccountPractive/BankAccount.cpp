@@ -506,12 +506,40 @@ int main() {
 	cust2.setAccounts(2, cust2Accounts);
 	cust3.setAccounts(3, cust3Accounts);
 
-	/* Testing Customer Objects Using Overloaded Operators: Begin*/
+	/* Testing Customer Objects Using Overloaded Operators: Begin */
 	std::cout << "Testing Phase : Overloaded Operators : Customer Objects : Display\n" << std::endl;
 	std::cout << cust1 << std::endl;
 	std::cout << cust2 << std::endl;
 	std::cout << cust3 << std::endl;
 	std::cout << cust4 << std::endl;
+
+	/* Testing Savings Account Setters and Getters : Begin*/
+	std::cout << "Testing Phase : Setters and Getters : Savings Account Objects" << std::endl;
+	savAcct1.setAccountNum(5555);
+	savAcct1.setBalance(88.97);
+	savAcct1.setInterestRate(0.006);
+	std::cout << savAcct1.getAccountNumber() << std::endl;
+	std::cout << savAcct1.getBalance() << std::endl;
+	std::cout << savAcct1.getInterestRate() << std::endl;
+	/* Testing Savings Account Setters and Getters : End*/
+
+	/* Testing Chequing Account Setters and Getters : Begin*/
+	std::cout << "Testing Phase : Setters and Getters : Chequing Account Objects" << std::endl;
+	cheAcct1.setAccountNum(4444);
+	cheAcct1.setBalance(500.02);
+	cheAcct1.setTransactionNum(2);
+	std::cout << cheAcct1.getAccountNumber() << std::endl;
+	std::cout << cheAcct1.getBalance() << std::endl;
+	std::cout << cheAcct1.getTransactionNum() << std::endl;
+	/* Testing Chequing Account Setters and Getters : End*/
+
+	/* Testing Customer Account Setters and Getters : Begin*/
+	std::cout << "Testing Phase : Setters and Getters : Customer Objects" << std::endl;
+	cust1.setName("Evan Robertson");
+	std::cout << cust1.getName() << std::endl;
+	std::cout << cust1.getNumOfAccounts() << std::endl;
+	std::cout << cust1.getAccounts()[0] << std::endl;
+	/* Testing Customer Account Setters and Getters : End*/
 
 	std::cout << "Testing Phase : Overloaded Operators : Customer Objects (cust1) : Input\n" << std::endl;
 	std::cin >> cust1;
@@ -520,26 +548,40 @@ int main() {
 	std::cout << cust1 << std::endl;
 	/* Testing Customer Objects Using Overloaded Operators: End*/
 
-	/* Testing BankAccount Objects Using Overloaded Operators: Begin*/
+	/* Testing BankAccount Objects Using Overloaded Operators: Begin */
 	std::cout << "Testing Phase : Overloaded Operators : BankAccount" << std::endl;
 	std::cout << acct1;
 	std::cin >> acct1;
 	std::cout << acct1;
 	/* Testing BankAccount Objects Using Overloaded Operators: Begin*/
 
-	/* Testing SavingsAccount Objects Using Overloaded Operators: Begin*/
+	/* Testing SavingsAccount Objects Using Overloaded Operators: Begin */
 	std::cout << "Testing Phase : Overloaded Operators : SavingsAccount" << std::endl;
 	std::cout << savAcct1;
 	std::cin >> savAcct1;
 	std::cout << savAcct1;
 	/* Testing SavingsAccount Objects Using Overloaded Operators: Begin*/
 
-	/* Testing ChequingAccount Objects Using Overloaded Operators: Begin*/
+	/* Testing ChequingAccount Objects Using Overloaded Operators: Begin */
 	std::cout << "Testing Phase : Overloaded Operators : ChequingAccount" << std::endl;
 	std::cout << cheAcct1;
 	std::cin >> cheAcct1;
 	std::cout << cheAcct1;
 	/* Testing ChequingAccount Objects Using Overloaded Operators: Begin*/
-	
+
+	/* Testing SavingsAccount Objects applyInterestRate() function: Begin*/
+	std::cout << "Testing Phase : applyInterestRate() Function : Savings Account" << std::endl;
+	std::cout << savAcct2;
+	savAcct2.applyInterestRate();
+	std::cout << savAcct2;
+	/* Testing SavingsAccount Objects applyInterestRate() function: Begin*/
+
+	/* Testing SavingsAccount Objects applyFees() function: Begin*/
+	std::cout << "Testing Phase : applyFees() Function : Chequing Account" << std::endl;
+	std::cout << cheAcct2;
+	cheAcct2.applyFees(cheAcct2.getTransactionNum());
+	std::cout << cheAcct2;
+	/* Testing SavingsAccount Objects applyFees() function: Begin*/
+
 	return 0;
 }
