@@ -7,6 +7,7 @@
 *		Sept 17th - Added Customer Class, ChequingAccount class,
 *		Sept 18th - Added insertion and extraction operators for new classes, added static validatiod methods
 *		Sept 20th - Changed testing methods, more thorough. Should be ready for next class 
+*		Sept 23rd - Added testing for deposit and withdrawl methods
 */
 
 #include <iostream>
@@ -505,6 +506,20 @@ int main() {
 	cust1.setAccounts(1, cust1Accounts);
 	cust2.setAccounts(2, cust2Accounts);
 	cust3.setAccounts(3, cust3Accounts);
+
+	/* Testing Savings Account Objects : Withdrawl And Deposit*/
+	std::cout << "Testing Phase : Savings Account Objects : Withdrawl And Deposit\n" << std::endl;
+	savAcct1.deposit(100);
+	std::cout << savAcct1;
+	savAcct1.withdrawal(50);
+	std::cout << savAcct1;
+
+	/* Testing Chequing Account Objects : Withdrawl And Deposit*/
+	std::cout << "Testing Phase : Chequing Account Objects : Withdrawl And Deposit\n" << std::endl;
+	cheAcct1.deposit(100);
+	std::cout << savAcct1;
+	cheAcct1.withdrawal(50);
+	std::cout << savAcct1;
 
 	/* Testing Customer Objects Using Overloaded Operators: Begin */
 	std::cout << "Testing Phase : Overloaded Operators : Customer Objects : Display\n" << std::endl;
