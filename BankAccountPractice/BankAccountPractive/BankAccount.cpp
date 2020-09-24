@@ -8,6 +8,7 @@
 *		Sept 18th - Added insertion and extraction operators for new classes, added static validatiod methods
 *		Sept 20th - Changed testing methods, more thorough. Should be ready for next class 
 *		Sept 23rd - Added testing for deposit and withdrawl methods
+*		Sept 23rd - Adjusted Interest rate - new rates, 0.005 - 0.03, and now displays rates as proper percentages, 0.5% and 3%
 */
 
 #include <iostream>
@@ -211,7 +212,7 @@ void SavingsAccount::applyInterestRate() {
 //Validate SavingsAccount Interest Rate
 bool SavingsAccount::isValidInterestRate(double intRate) {
 	bool result = false;
-	if (intRate >= .005 && intRate <= .04) {
+	if (intRate >= .005 && intRate <= 0.03) {
 		result = true;
 	}
 	return result;
@@ -222,7 +223,7 @@ bool SavingsAccount::isValidInterestRate(double intRate) {
 std::ostream& operator<<(std::ostream& out, SavingsAccount& sa) {
 	out << "\nAccount Number: " << sa.getAccountNumber()
 		<< "\nAccount Balance: $" << sa.getBalance()
-		<< "\nAccount Interest Rate: " << sa.getInterestRate() << "%" << std::endl;
+		<< "\nAccount Interest Rate: " << sa.getInterestRate()*100 << "%" << std::endl;
 	return out;
 }
 
@@ -250,11 +251,11 @@ std::istream& operator>>(std::istream& in, SavingsAccount& sa) {
 	}
 	sa.setBalance(balance);
 
-	std::cout << "\nEnter a new interest rate (0.005% - 0.04%) ";
+	std::cout << "\nEnter a new interest rate (0.005 - 0.03) ";
 	in >> sa.interestRate;
 	while (!sa.isValidInterestRate(sa.interestRate)) {
 		std::cout << "invalid interest rate\n";
-		std::cout<<"Enter a new interest rate (0.005% - 0.04%) ";
+		std::cout<<"Enter a new interest rate (0.005 - 0.03) ";
 		in >> sa.interestRate;
 	}
 	return in;
@@ -491,6 +492,7 @@ std::istream& operator>>(std::istream& in, Customer& customer) {
 		std::cout << "Enter number of accounts for this customer: ";
 		in >> customer.numOfAccounts;
 	}
+
 	return in;
 }
 
@@ -506,6 +508,10 @@ int main() {
 	cust1.setAccounts(1, cust1Accounts);
 	cust2.setAccounts(2, cust2Accounts);
 	cust3.setAccounts(3, cust3Accounts);
+
+	std::cout << savAcct1;
+	std::cin >> savAcct1;
+	std::cout << savAcct1;
 
 	/* Testing Savings Account Objects : Withdrawl And Deposit*/
 	std::cout << "Testing Phase : Savings Account Objects : Withdrawl And Deposit\n" << std::endl;
